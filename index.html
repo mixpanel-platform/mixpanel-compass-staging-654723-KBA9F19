@@ -54,6 +54,7 @@
             for (var i in objDates){
               for (var x in objDates[i]){
                   x = moment(x).calendar()
+                  console.log(objDates[i][x])
                   newObj[x] = objDates[i][x]
                   console.log(newObj);
               };
