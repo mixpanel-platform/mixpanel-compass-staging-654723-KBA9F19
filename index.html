@@ -52,10 +52,11 @@
             var objDates = results.values()
             var newObj = {};
             for (var i in objDates){
-              for (var x; x < objDates[i].lenght; x++){
-                  x = moment(x).calendar()
-                  console.log(objDates[i])
+              for (var x in objDates[i]){
+                  var b = moment(x).calendar()
+                  console.log(objDates[i][x])
                   newObj[x] = objDates[i][x]
+                  
                   console.log(newObj);
               };
             };
