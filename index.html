@@ -43,8 +43,8 @@
       });
 
       var runQuery = function() {
-          
-          MP.api.events('user_conducts_search','commitment_request','showsheet_creator_opened', params).done(function(results) {
+          var events = ['user_conducts_search','commitment_request','showsheet_creator_opened']
+          MP.api.events(events[0],events[1],events[2], params).done(function(results) {
             eventGraph.MPChart('setData', results);
             eventTable.MPTable('setData', results);
             console.log(results.json);
@@ -56,7 +56,6 @@
                   var b = moment(x).calendar()
                   console.log(objDates[i][x])
                   newObj[x] = objDates[i][x]
-                  
                   console.log(newObj);
               };
             };
