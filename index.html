@@ -57,7 +57,7 @@
           MP.api.events('agent_searched',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
             eventGraph2.MPChart('setData', results2);
             eventTable2.MPTable('setData', results2);
-            totalSearches = results2.json.agenct_searched
+            totalSearches = results2.json
             console.log(totalSearches)
           });
           //get unique searches
