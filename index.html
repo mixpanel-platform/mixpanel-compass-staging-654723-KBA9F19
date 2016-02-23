@@ -21,6 +21,10 @@
       <div style="padding-top: 20px;" id="graph"></div>
     </div>
     <div id="table"></div>
+    <br>
+    <div style="padding-top: 20px;" id="graph2"></div>
+    <br>
+    <div id="table2"></div>
     <script>
       var results;
       //set the parameters you want for your graphs
@@ -34,39 +38,24 @@
         showPercentages: true,
         firstColHeader: 'Event'
       });
+      var eventGraph2  = $('#graph2').MPChart({chartType: 'line'});
+      var eventTable2  = $('#table2').MPTable({
+        showPercentages: true,
+        firstColHeader: 'Event'
+      });
 
       var runQuery = function() {
           var events = ['user_conducts_search','commitment_request','showsheet_creator_opened']
           MP.api.events(events[0],events[1],events[2], params).done(function(results) {
             eventGraph.MPChart('setData', results);
             eventTable.MPTable('setData', results);
-            console.log(results.json);
-            console.log(results.values());
-            var objDates = results.values()
-            var newObj = {};
-              console.log("Event lenght" + events.length)
-              //loop to get all event objects
-              for (var i in objDates){
-                //loop to get all keys of event objects. In this case dates
-                for (var x in objDates[i]){
-                    var b = moment(x).calendar()
-                    console.log(objDates[i][x])
-                    newObj[b] = objDates[i][x]
-                    console.log(newObj);
-                };
-                //results.values()[i] = newObj;
-                //console.log(results.values())
-              };
-          });
+          MP.api.events('agent_searched',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
+            eventGraph2.MPChart('setData', results);
+            eventTable3.MPTable('setData', results);
+          })  
           
       };
-      // eventSelect.on('change', function(e, eventName) {
-      //   propSelect.MPPropertySelect('setEvent', eventName);
-      //   $("#by").show();
-      //   runQuery();
-      // });
-      // propSelect.on('change', runQuery);
-      // dateSelect.on('change', runQuery);
+
       runQuery();
       
     </script>
