@@ -50,10 +50,11 @@
                     var b = moment(x).calendar()
                     //console.log(objDates[i][x])
                     newObj[x] = objDates[i][x]
-                    console.log(newObj);
+                    console.log("object before assigning event name back - " newObj);
+                    
                 };
                 results.values()[i] = newObj;
-                console.log(results.values())
+                console.log("new object? - " + results.values())
               };
           });
           
