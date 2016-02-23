@@ -25,6 +25,8 @@
     <div style="padding-top: 20px;" id="graph2"></div>
     <br>
     <div id="table2"></div>
+    <br>
+    <div id="table3"></div>
     <script>
       var results;
       //set the parameters you want for your graphs
@@ -42,6 +44,10 @@
       var eventTable2  = $('#table2').MPTable({
         showPercentages: true,
         firstColHeader: 'Total Agent Searches'
+      });
+      var eventTable3  = $('#table3').MPTable({
+        showPercentages: true,
+        firstColHeader: 'Searches Per Agent'
       });
       
       var dividend
@@ -71,6 +77,8 @@
             
             var mathstuff = dividend.divide(divisor).values()
             console.log(mathstuff)
+            
+            
           });  
           
        
