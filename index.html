@@ -45,14 +45,16 @@
       });
 
       var runQuery = function() {
+          //top trending events
           var events = ['user_conducts_search','commitment_request','showsheet_creator_opened']
           MP.api.events(events[0],events[1],events[2], params).done(function(results) {
             eventGraph.MPChart('setData', results);
             eventTable.MPTable('setData', results);
+          //get total searches
           MP.api.events('agent_searched',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
-            eventGraph2.MPChart('setData', results);
-            eventTable3.MPTable('setData', results);
-          })  
+            eventGraph2.MPChart('setData', results2);
+            eventTable3.MPTable('setData', results2);
+          });  
           
       };
 
