@@ -53,6 +53,8 @@
             eventGraph.MPChart('setData', results);
             eventTable.MPTable('setData', results);
           });
+          var stuff
+          var mathstuff
           //get total searches
           MP.api.events('agent_searched',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
             eventGraph2.MPChart('setData', results2);
@@ -61,10 +63,10 @@
             //console.log(totalSearches.agent_searched)
             var stuff = totalSearches.agent_searched
             console.log(stuff)
-            for (var i in stuff){
-              console.log(i)
-              console.log(stuff[i])
-            }
+            // for (var i in stuff){
+            //   console.log(i)
+            //   console.log(stuff[i])
+            // }
             // for(var i in totalSearches.agent_searched){
             //   console.log(totalSearches.agent_searched[i]);
             // }
@@ -73,9 +75,13 @@
           //get unique searches
            MP.api.events('agent_searched',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
             uniqueSearches = results3.values()
-            //console.log(uniqueSearches.agent_searched[0])
+            mathstuff = uniqueSearches.agent_searched
             
           });  
+          for (var test in stuff){
+            stuff[i] = stuff[i]/mathstuff[i]
+            console.log(stuff[i])
+          }
           
       };
 
