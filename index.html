@@ -58,9 +58,14 @@
             eventGraph2.MPChart('setData', results2);
             eventTable2.MPTable('setData', results2);
             totalSearches = results2.values()
-            console.log(totalSearches.agent_searched)
+            //console.log(totalSearches.agent_searched)
             var stuff = totalSearches.agent_searched
             console.log(stuff)
+            for (var i in stuff){
+              for (var x in i){
+                console.log(x)
+              }
+            }
             // for(var i in totalSearches.agent_searched){
             //   console.log(totalSearches.agent_searched[i]);
             // }
