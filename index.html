@@ -45,6 +45,8 @@
       });
 
       var runQuery = function() {
+          var totalSearches
+          var uniqueSearches
           //top trending events
           var events = ['user_conducts_search','commitment_request','showsheet_creator_opened']
           MP.api.events(events[0],events[1],events[2], params).done(function(results) {
@@ -55,12 +57,14 @@
           MP.api.events('agent_searched',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
             eventGraph2.MPChart('setData', results2);
             eventTable2.MPTable('setData', results2);
-            console.log(results2.values())
+            totalSearches = results2.values()
+            console.log("total searches " + totalSearcehs)
           });
           //get unique searches
            MP.api.events('agent_searched',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
-
-            console.log(results3.values())
+            totalSearches = results2.values()
+            console.log("unique searches " + uniqueSearcehs)
+            
           });  
           
       };
