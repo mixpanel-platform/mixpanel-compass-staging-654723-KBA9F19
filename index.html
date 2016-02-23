@@ -43,47 +43,42 @@
         showPercentages: true,
         firstColHeader: 'Total Agent Searches'
       });
-
+      
+      var divided
+      var divisor
       var runQuery = function() {
-          var totalSearches
-          var uniqueSearches
+
           //top trending events
           var events = ['user_conducts_search','commitment_request','showsheet_creator_opened']
           MP.api.events(events[0],events[1],events[2], params).done(function(results) {
             eventGraph.MPChart('setData', results);
             eventTable.MPTable('setData', results);
           });
-          var stuff
-          var mathstuff
+        
           //get total searches
           MP.api.events('agent_searched',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
             eventGraph2.MPChart('setData', results2);
             eventTable2.MPTable('setData', results2);
-            totalSearches = results2.values()
-            //console.log(totalSearches.agent_searched)
-            var stuff = totalSearches.agent_searched
-            console.log(stuff)
-            // for (var i in stuff){
-            //   console.log(i)
-            //   console.log(stuff[i])
-            // }
-            // for(var i in totalSearches.agent_searched){
-            //   console.log(totalSearches.agent_searched[i]);
-            // }
-            //console.log(totalSearches)
+            var totalSearches = results2.values()
+            divided = MP.Data.inst(totalSearches.agent_searched)
+            console.log(divided)
           });
           //get unique searches
            MP.api.events('agent_searched',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
-            uniqueSearches = results3.values()
-            mathstuff = uniqueSearches.agent_searched
-            
+            var uniqueSearches = results3.values()
+            divison = MP.Data.inst(uniqueSearches.agent_searched)
+            console.log(divisor)
           });  
-          var testvalue = mathstuff
-          console.log("testvalue " + testvalue)
+          
+       
+          // dividend = MP.Data.inst({a: {b: 10, c: 20}});
+          // divisor = MP.Data.inst({a: {b: 5, c: 4}});
+          // dividend.divide(divisor).values(); // Returns {a: {b: 2, c: 5}}
           
       };
 
       runQuery();
+ 
       
     </script>
   </body>
