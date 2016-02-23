@@ -41,7 +41,7 @@
       var eventGraph2  = $('#graph2').MPChart({chartType: 'line'});
       var eventTable2  = $('#table2').MPTable({
         showPercentages: true,
-        firstColHeader: 'Event'
+        firstColHeader: 'Total Agent Searches'
       });
 
       var runQuery = function() {
@@ -54,7 +54,7 @@
           //get total searches
           MP.api.events('agent_searched',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
             eventGraph2.MPChart('setData', results2);
-            eventTable3.MPTable('setData', results2);
+            eventTable2.MPTable('setData', results2);
           });  
           
       };
