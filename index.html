@@ -75,10 +75,10 @@
             divisor = MP.Data.inst(uniqueSearches.agent_searched)
             console.log(divisor)
             
-            var mathstuff = dividend.divide(divisor).values()
-            console.log(mathstuff)
-            var searchesPerAgent = {mathstuff}
-            eventTable2.MPTable('setData', searchesPerAgent);
+            var SearchesPerAgent = dividend.divide(divisor).values()
+            console.log(SearchesPerAgent)
+            var searchData = {SearchesPerAgent}
+            eventTable2.MPTable('setData', searchData);
             
             
           });  
