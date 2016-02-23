@@ -63,7 +63,7 @@
           //get unique searches
            MP.api.events('agent_searched',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
             uniqueSearches = results3.values()
-            console.log(uniqueSearches)
+            console.log(uniqueSearches.agent_searched[0])
             
           });  
           
