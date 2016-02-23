@@ -43,10 +43,6 @@
       });
 
       var runQuery = function() {
-          //function to re-generate objects names for correct date formats
-          function objGenerator(objName){
-            var objName = {}
-          }
           var events = ['user_conducts_search','commitment_request','showsheet_creator_opened']
           MP.api.events(events[0],events[1],events[2], params).done(function(results) {
             eventGraph.MPChart('setData', results);
@@ -55,10 +51,6 @@
             console.log(results.values());
             var objDates = results.values()
             var newObj = {};
-            //loop to re-generate object names
-            for (var a; a < events[a]; a++){
-              objGenerator(events[i])
-              console.log(user_conducts_search)
               //loop to get all event objects
               for (var i in objDates){
                 //loop to get all keys of event objects. In this case dates
@@ -71,7 +63,6 @@
                 results.values()[i] = newObj;
                 console.log(results.values())
               };
-            }
           });
           
       };
