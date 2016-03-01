@@ -22,11 +22,38 @@
     </div>
     <div id="table"></div>
     <br>
+    <div style="padding-top: 20px;" id="graph7"></div>
+    <br>
+    <div id="table7"></div>
+    <br>
+    <div style="padding-top: 20px;" id="graph8"></div>
+    <br>
+    <div id="table8"></div>
+    <br>
+    <h2 align="center">Agent Search Summary</h2>
     <div style="padding-top: 20px;" id="graph2"></div>
     <br>
     <div id="table2"></div>
     <br>
+    <h2 align="center">Folder Creation</h2>
+    <div style="padding-top: 20px;" id="graph3"></div>
+    <br>
     <div id="table3"></div>
+    <br>
+    <h2 align="center">Document Usage</h2>
+    <div style="padding-top: 20px;" id="graph4"></div>
+    <br>
+    <div id="table4"></div>
+    <br>
+    <h2 align="center">Valuation Visits</h2>
+    <div style="padding-top: 20px;" id="graph5"></div>
+    <br>
+    <div id="table5"></div>
+    <br>
+    <h2 align="center">Valuation Actions</h2>
+    <div style="padding-top: 20px;" id="graph6"></div>
+    <br>
+    <div id="table6"></div>
     <script>
       var results;
       //set the parameters you want for your graphs
@@ -35,64 +62,331 @@
         unit: 'week',        // level of granularity of the data, can be 'minute', 'hour', 'day', 'week', 'month'
         interval: 12         // number of "units" back to include
       };
+      //graphs to hold general data
       var eventGraph  = $('#graph').MPChart({chartType: 'line'});
       var eventTable  = $('#table').MPTable({
         showPercentages: true,
         firstColHeader: 'Event'
       });
+      // var eventGraph  = $('#graph7').MPChart({chartType: 'line'});
+      // var eventTable  = $('#table7').MPTable({
+      //   showPercentages: true,
+      //   firstColHeader: 'Event'
+      // });
+      // var eventGraph  = $('#graph8').MPChart({chartType: 'line'});
+      // var eventTable  = $('#table8').MPTable({
+      //   showPercentages: true,
+      //   firstColHeader: 'Event'
+      // });
+      //graph to hold search data
       var eventGraph2  = $('#graph2').MPChart({chartType: 'line'});
       var eventTable2  = $('#table2').MPTable({
-        showPercentages: true,
-        firstColHeader: 'Total Agent Searches'
+        showPercentages: true
+
       });
-      //graph to hold unique searches per agent
+      //graph to hold folder data 
+      var eventGraph3 = $('#graph3').MPChart({chartType: 'line'});
       var eventTable3  = $('#table3').MPTable({
-        showPercentages: true,
-        firstColHeader: 'Searches Per Agent'
+        showPercentages: true
+   
+      });
+      //graph to hold document data 
+      var eventGraph4 = $('#graph4').MPChart({chartType: 'line'});
+      var eventTable4  = $('#table4').MPTable({
+        showPercentages: true
+   
+      });
+      //graph to hold valuation data 
+      var eventGraph5 = $('#graph5').MPChart({chartType: 'line'});
+      var eventTable5  = $('#table5').MPTable({
+        showPercentages: true
+   
+      });
+      //graph to hold valuation data 
+      var eventGraph6 = $('#graph6').MPChart({chartType: 'line'});
+      var eventTable6  = $('#table6').MPTable({
+        showPercentages: true
+   
       });
       
       var dividend
       var divisor
+      var toatalAgentTotalSearches
+      var uniqueAgentSearches
+      var toatalAgentFolderCreated
+      var toatalDocumentsVisited
+      var uniqueUsersVisitingDocuments
+      var toatalValutationsVisited
+      var uniqueUsersVisitingValuations
+      var totalValuationsPrinted
+      var uniqueUsersVisitingPrinted
+      var percentValuationsAccessedDivisor 
+      var percentValusationActionDivident
+      var ValuationsToVisits
+
       var runQuery = function() {
 
           //top trending events
-          var events = ['user_conducts_search','commitment_request','showsheet_creator_opened']
-          MP.api.events(events[0],events[1],events[2], params).done(function(results) {
+          var events = ['user_conducts_search','commitment_request','agent_searched','valuation_spreadsheet_requested','valuation_v2_printed','folder_created','showsheet_creator_opened','showsheet_printed','listing_strategy_print_previewed','network_tool_spreadsheet_requested','network_tool_email_accessed','performance_tool_accessed','tool_action_bar_save_modal_confirm_button_clicked']
+          MP.api.events(events[0],events[1],events[2],events[3],events[4], events[4],events[5],events[6],events[7],events[8],events[9],events[10],events[11],events[12], params).done(function(results) {
             eventGraph.MPChart('setData', results);
             eventTable.MPTable('setData', results);
           });
+          // MP.api.events(events[4],events[5],events[6],events[7],events[8],events[9], params).done(function(results5) {
+          //   eventGraph.MPChart('setData', results5);
+          //   eventTable.MPTable('setData', results5);
+          // });
+          // MP.api.events(events[10],events[11],events[12], params).done(function(results6) {
+          //   eventGraph.MPChart('setData', results6);
+          //   eventTable.MPTable('setData', results6);
+          // });
         
           //get total searches
           MP.api.events('agent_searched',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
-            eventGraph2.MPChart('setData', results2);
-            eventTable2.MPTable('setData', results2);
+            
+            //store total searches in a global variable
+            toatalAgentTotalSearches = results2.json.agent_searched;
+            
+            //set the total searches as the divident
             var totalSearches = results2.values()
             dividend = MP.Data.inst(totalSearches.agent_searched)
-            console.log(dividend)
+            
           });
+          
           //get unique searches
            MP.api.events('agent_searched',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
             var uniqueSearches = results3.values()
+            //set the total searches as the divisor
             divisor = MP.Data.inst(uniqueSearches.agent_searched)
-            console.log(divisor)
+
+            //store unique searches in global variable
+            uniqueAgentSearches = results3.json.agent_searched;
+
             
-            var SearchesPerAgent = dividend.divide(divisor).values()
-            console.log(SearchesPerAgent)
-            var searchData = {SearchesPerAgent}
-            eventTable2.MPTable('setData', searchData);
-            
-            
-          });  
+
+            //math for searches per agent
+            var searchesPerAgent = dividend.divide(divisor).values()
+            //searchesPerAgent = searchesPerAgent
+
+            //set agent search data
+            var searchData = {toatalAgentTotalSearches, uniqueAgentSearches, searchesPerAgent}
+            eventGraph2.MPChart('setData', searchData);
+            eventTable2.MPTable('setData', searchData);           
+          });
+      };
+
+      var runQuery2 = function(){
+        //get total searches
+        var toatalFoldersCreated
+        MP.api.events('folder_created',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
           
-       
+          //store total documents in a global variable
+          toatalFoldersCreated = results2.json.folder_created;
+          
+          //set the total documents as the divident
+          var totalFolders = results2.values()
+          dividend = MP.Data.inst(totalFolders.folder_created)
+          
+        });
+        
+        //get unique searches
+         MP.api.events('folder_created',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
+          var uniqueFolders = results3.values()
+          //set the total documents as the divisor
+          divisor = MP.Data.inst(uniqueFolders.folder_created)
+
+          //store unique documents in global variable
+          uniqueUsersCreatingFolders = results3.json.folder_created;
+
+
+          //math for documents per agent
+          var foldersPerAgent = dividend.divide(divisor).values()
+          
+
+          //combine total, unique document creation, and average document creation into a single object to set for tables
+          var folderData = {toatalFoldersCreated, uniqueUsersCreatingFolders, foldersPerAgent}
+          eventGraph3.MPChart('setData', folderData);
+          eventTable3.MPTable('setData', folderData);           
+        });
+      };
+      var runQuery3 = function(){
+        //get total searches
+        MP.api.events('documents_visited',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
+          
+          //store total searches in a global variable
+          toatalDocumentsVisited = results2.json.documents_visited;
+          
+          //set the total searches as the divident
+          var totalDocuments = results2.values()
+          dividend = MP.Data.inst(totalDocuments.documents_visited)
+          
+        });
+        
+        //get unique searches
+         MP.api.events('documents_visited',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
+          var uniqueDocuments = results3.values()
+          //set the total searches as the divisor
+          divisor = MP.Data.inst(uniqueDocuments.documents_visited)
+
+          //store unique searches in global variable
+          uniqueUsersVisitingDocuments = results3.json.documents_visited;
+
+          //math for documents per agent
+          var documentsPerAgent = dividend.divide(divisor).values()
+          //searchesPerAgent = searchesPerAgent
+
+          //set unique, total, and average documetns into single object. set data for charts
+          var documentData = {toatalDocumentsVisited, uniqueUsersVisitingDocuments, documentsPerAgent}
+          eventGraph4.MPChart('setData', documentData);
+          eventTable4.MPTable('setData', documentData);           
+        });
+      };
+      // query to get document saved information. not filled out as I could not find the event for this specific
+      // var runQuery6 = function(){
+      //   var percentDividend
+      //   var percentDivisor
+      //   var percentResults
+      //   //get total documents saved
+      //   MP.api.events('documents_saved'*need to be updated with actual event name*,{type: 'general', unit: 'week', interval: 12}).done(function(results2){
+          
+      //     //store total documents saved in a global variable
+      //     toatalDocumentSaved = results2.json.documents_saved*need to be updated with actual event name*;
+          
+      //     //set the total documents saved as the divident
+      //     var totalDocumentsSave = results2.values()
+      //     dividend = MP.Data.inst(totalDocumentsSave.documents_saved*need to be updated with actual event name*)
+      //     // store total documents in a divisor variable for % documents saved/visit
+      //     percentDivisor = MP.Data.inst(totalValuations.documents_saved*need to be updated with actual event name*)
+          
+      //   });
+        
+      //   //unique documents saved
+      //    MP.api.events('documents_saved',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
+      //     var uniqueDocumentsSaved = results3.values()
+      //     //set the total searches as the divisor
+      //     divisor = MP.Data.inst(uniqueDocumentsSaved.documents_saved*need to be updated with actual event name*)
+      //     // store unqiue documents in a divident variable for % documents saved/visit
+      //     percentDividend = MP.Data.inst(uniqueValuationsVisited.documents_saved*need to be updated with actual event name*)
+
+      //     //store unique searches in global variable
+      //     uniqueUsersSavingDocuments = results3.json.documents_saved;
+
+      //     //math for documents per agent
+      //     var documentsSavedPerAgent = dividend.divide(divisor).values()
+
+      //     // % calculations
+      //     percentResults = percentDividend.divide(percentDivisor).values()
+      //     console.log(percentResults)
+
+      //     //set unique, total, and average documetns into single object. set data for charts
+      //     var documentSavedData = {toatalDocumentSaved, uniqueUsersSavingDocuments, documentsSavedPerAgent}
+      //     eventGraph7.MPChart('setData', documentSavedData); //need to add chart divs
+      //     eventTable7.MPTable('setData', documentSavedData); //need to add chart divs       
+      //   });
+      // };
+       //query for valuations
+       var runQuery4 = function(){  
+        //get total valutation
+        MP.api.events('valuation_v2_accessed',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
+          
+          //store total valuation visits in a global variable
+          toatalValuationsVisited = results2.json.valuation_v2_accessed;
+          
+          
+          //set the total searches as the divident
+          var totalValuations = results2.values()
+          dividend = MP.Data.inst(totalValuations.valuation_v2_accessed)
+          // store total documents in a divisor variable for % valutationActionsToVisits
+          percentValuationsAccessedDivisor = MP.Data.inst(totalValuations.valuation_v2_accessed)
+          
+        });
+        
+        //get unique searches
+         MP.api.events('valuation_v2_accessed',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
+          var uniqueValuationsVisited = results3.values()
+          //set the total searches as the divisor
+          divisor = MP.Data.inst(uniqueValuationsVisited.valuation_v2_accessed)
+    
+          //store unique searches in global variable
+          uniqueUsersVisitingValuations = results3.json.valuation_v2_accessed;
+          
+
+          //math for documents per agent
+          var valuationsPerAgent = dividend.divide(divisor).values()
+          
+
+
+          //set unique, total, and average documetns into single object. set data for charts
+          var valuationData = {toatalValuationsVisited, uniqueUsersVisitingValuations, valuationsPerAgent}
+          eventGraph5.MPChart('setData', valuationData);
+          eventTable5.MPTable('setData', valuationData);           
+        });
+      };
+      //spreadsheets and vaulations query
+      var runQuery5 = function(){
+        var requestedSpreadsheets
+        var totalValuationActions = {}
+
+        //get total valutation Printed
+        MP.api.events('valuation_v2_printed',{type: 'general', unit: 'week', interval: 12}).done(function(results2){
+          
+          //store total valuations printed in a global variable
+          totalValuationsPrinted = results2.json.valuation_v2_printed;
+          
+          //set the total valuations printed as the divident
+          var totalPrints = results2.values()
+          dividend = MP.Data.inst(totalPrints.valuation_v2_printed)
+          
+        });
+        MP.api.events('valuation_spreadsheet_requested',{type: 'general', unit: 'week', interval: 12}).done(function(results4){
+          requestedSpreadsheets =  results4.json.valuation_spreadsheet_requested;
+          
+          //combine the requestedSpreadsheets and totalValuationsPrinted objects to make a "total" of all valuation actions
+          for (x in totalValuationsPrinted){
+            totalValuationActions[x] = totalValuationsPrinted[x] + requestedSpreadsheets[x]
+          }
+          percentValusationActionDivident = MP.Data.inst(totalValuationsPrinted)
+
+
+        });
+        
+        //get unique valutation Printed
+         MP.api.events('valuation_v2_printed',{type: 'unique', unit: 'week', interval: 12}).done(function(results3){
+          var uniqueValuationsPrinted = results3.values()
+          //set the unique valuations printed as the divisor
+          divisor = MP.Data.inst(uniqueValuationsPrinted.valuation_v2_printed)
+
+          //store unique valuations printed in global variable
+          uniqueUsersPrinting = results3.json.valuation_v2_printed;
+          
+
+          //math for valuations printed per agent
+          var printsPerAgent = dividend.divide(divisor).values()
+          
+          //set ValuationsToVisits
+          ValuationsToVisits = percentValusationActionDivident.divide(percentValuationsAccessedDivisor).values()
+
+
+          //set unique, total, and average valuations printed into single object. set data for charts
+          var printingData = {totalValuationsPrinted, requestedSpreadsheets, uniqueUsersPrinting, printsPerAgent, ValuationsToVisits}
+          eventGraph6.MPChart('setData', printingData);
+          eventTable6.MPTable('setData', printingData);           
+        });
+      };
+      runQuery();
+      runQuery2();
+      runQuery3();
+      runQuery4();
+      runQuery5();
+
+     
+
+          
+
+          // examples of use dividend.divide
           // dividend = MP.Data.inst({a: {b: 10, c: 20}});
           // divisor = MP.Data.inst({a: {b: 5, c: 4}});
           // dividend.divide(divisor).values(); // Returns {a: {b: 2, c: 5}}
-          
-      };
-
-      runQuery();
-     
       
     </script>
   </body>
